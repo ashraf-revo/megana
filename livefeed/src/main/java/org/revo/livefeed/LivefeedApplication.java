@@ -22,7 +22,7 @@ public class LivefeedApplication {
     @Bean
     public IntegrationFlow processUniCastUdpMessage() {
         return IntegrationFlows
-                .from(new MulticastReceivingChannelAdapter("225.4.5.6", 4444))
+                .from(new MulticastReceivingChannelAdapter("224.0.0.1", 4444))
                 .handle(x -> log.info(new String(((byte[]) x.getPayload()))))
                 .get();
     }

@@ -2,7 +2,7 @@
 
 ### What is used for
 - simple demo how to send udp multicast to all listeners in the group
-using spring boot integration 
+using kubernetes spring boot integration it `send packet to all pods`
 
 ## modules
 - livefeed responsible handle receive 

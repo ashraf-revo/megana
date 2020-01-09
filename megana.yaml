@@ -50,6 +50,7 @@ spec:
       containers:
         - name: livefeed
           image: ashraf1abdelrasool/livefeed:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
           ports:
             - containerPort: 4444
 ---
@@ -86,6 +87,7 @@ spec:
       containers:
         - name: livesender
           image: ashraf1abdelrasool/livesender:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 ---

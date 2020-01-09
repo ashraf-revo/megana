@@ -49,7 +49,7 @@ public class LivesenderApplication {
     public IntegrationFlowRegistration integrationFlow(IntegrationFlowContext flowContext) {
         System.out.println("Creating an adapter to send to port ");
         IntegrationFlow flow = IntegrationFlows.from(publishSubscribeChannel)
-                .handle(Udp.outboundAdapter("225.4.5.6", 4444))
+                .handle(Udp.outboundAdapter("224.0.0.1", 4444))
                 .get();
         return flowContext.registration(flow).register();
     }
