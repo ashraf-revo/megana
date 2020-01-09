@@ -1,0 +1,106 @@
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: reader
+rules:
+  - apiGroups: [""]
+    resources: ["routes","pods","pods/log","pods/status","services","services/proxy","configmaps","endpoints","secrets","serviceaccounts","namespaces","namespaces/status","resourcequotas/status","events","bindings","replicationcontrollers","persistentvolumeclaims"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "watch", "list"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: reader
+roleRef:
+  kind: Role
+  name: reader
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: default
+    apiGroup: ""
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default
+data:
+  default.yaml: |-
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: livefeed
+spec:
+  selector:
+    matchLabels:
+      run: livefeed
+  template:
+    metadata:
+      labels:
+        run: livefeed
+    spec:
+      containers:
+        - name: livefeed
+          image: ashraf1abdelrasool/livefeed:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: 4444
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: livefeed
+  labels:
+    run: livefeed
+spec:
+  ports:
+    - name: livefeed
+      protocol: UDP
+      port: 4444
+      targetPort: 4444
+  type: ClusterIP
+  selector:
+    run: livefeed
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: livesender
+spec:
+  selector:
+    matchLabels:
+      run: livesender
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: livesender
+    spec:
+      containers:
+        - name: livesender
+          image: ashraf1abdelrasool/livesender:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: livesender
+  labels:
+    run: livesender
+spec:
+  ports:
+    - name: livesender
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+  selector:
+    run: livesender

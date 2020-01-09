@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: livefeed
+  main:
+    web-application-type: none
+  cloud:
+    kubernetes:
+      config:
+        sources:
+          - name: ${spring.application.name}
+          - name: default
+logging:
+  file:
+    name: ${spring.application.name}.log
